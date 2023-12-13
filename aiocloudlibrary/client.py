@@ -1,5 +1,4 @@
-"""
-Cloud Library Client using aiohttp for interacting with the Cloud Library API.
+"""Cloud Library Client using aiohttp for interacting with the Cloud Library API.
 
 This module provides a client class, CloudLibraryClient, to communicate with the Cloud Library API.
 It allows fetching current patron items, borrowing history, holds, saved items, and featured items.
@@ -12,6 +11,7 @@ Requirements:
 - aiohttp library (installed via pip)
 
 Example:
+-------
     client = CloudLibraryClient(
         barcode="xxxxxx@mail.com",  # Replace with actual barcode/email
         pin="xxxxxxxx",  # Replace with actual PIN/password
@@ -21,6 +21,7 @@ Example:
     print(f"Current Patron Items: {current}")
 
     # Similarly fetch other data using client.history(), client.holds(), client.saved(), client.featured()
+
 """
 
 import logging
@@ -34,6 +35,8 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class CloudLibraryClient:
+    """Class to communicate with the Cloud Library API."""
+
     def __init__(self, barcode, pin, library, custom_headers=None):
         """Initialize the CloudLibraryClient."""
         self.barcode = barcode
@@ -43,7 +46,7 @@ class CloudLibraryClient:
         self.custom_headers = custom_headers or {}
 
     async def start_session(self):
-        """Starts a session with the Cloud Library API."""
+        """Start a session with the Cloud Library API."""
         if self.session is None:
             self.session = aiohttp.ClientSession(
                 headers={**HEADERS, **self.custom_headers}
@@ -51,13 +54,13 @@ class CloudLibraryClient:
             await self.login()
 
     async def close_session(self):
-        """Closes the session with the Cloud Library API."""
+        """Close the session with the Cloud Library API."""
         if self.session:
             await self.session.close()
             self.session = None
 
     async def login(self):
-        """Logs in to the Cloud Library API."""
+        """Log in to the Cloud Library API."""
         data = {
             "action": "login",
             "barcode": self.barcode,
@@ -83,10 +86,10 @@ class CloudLibraryClient:
         expected_status=200,
         start_session=False,
     ):
-        """
-        Send a request to the Cloud Library API.
+        """Send a request to the Cloud Library API.
 
         Args:
+        ----
             method (str): HTTP method (POST, GET, etc.).
             path (str): Endpoint path.
             data (dict): Request payload.
@@ -95,6 +98,7 @@ class CloudLibraryClient:
             start_session (bool): Flag to indicate session start.
 
         Returns:
+        -------
             dict or None: Response payload as JSON or None if return_json is False.
         """
         if self.session is None and not start_session:
@@ -132,22 +136,23 @@ class CloudLibraryClient:
                     )
 
     def get_path(self, route=None):
-        """
-        Generates the path for a specific route.
+        """Generate the path for a specific route.
 
         Args:
+        ----
             route (str): Route identifier.
 
         Returns:
+        -------
             str: Path for the specified route.
         """
         return f"library/{self.library}/mybooks/{route}?_data=routes/library.$name.mybooks.{route}"
 
     async def current(self):
-        """
-        Retrieves current patron items from the Cloud Library API.
+        """Retrieve current patron items from the Cloud Library API.
 
-        Returns:
+        Returns
+        -------
             dict: Response payload for current patron items as JSON.
         """
         path = self.get_path("current")
@@ -158,10 +163,10 @@ class CloudLibraryClient:
         return await self.request("POST", path, data)
 
     async def holds(self):
-        """
-        Retrieves the patron's holds from the Cloud Library API.
+        """Retrieve the patron's holds from the Cloud Library API.
 
-        Returns:
+        Returns
+        -------
             dict: Response payload for patron's holds as JSON.
         """
         path = self.get_path("holds")
@@ -171,10 +176,10 @@ class CloudLibraryClient:
         return await self.request("POST", path, data)
 
     async def history(self):
-        """
-        Retrieves the patron's borrowing history from the Cloud Library API.
+        """Retrieve the patron's borrowing history from the Cloud Library API.
 
-        Returns:
+        Returns
+        -------
             dict: Response payload for patron's borrowing history as JSON.
         """
         path = self.get_path("history")
@@ -182,10 +187,10 @@ class CloudLibraryClient:
         return await self.request("POST", path, data)
 
     async def saved(self):
-        """
-        Retrieves the patron's saved items from the Cloud Library API.
+        """Retrieve the patron's saved items from the Cloud Library API.
 
-        Returns:
+        Returns
+        -------
             dict: Response payload for patron's saved items as JSON.
         """
         path = self.get_path("saved")
@@ -195,30 +200,30 @@ class CloudLibraryClient:
         return await self.request("POST", path, data)
 
     async def email(self):
-        """
-        Retrieves the patron's email settings from the Cloud Library API.
+        """Retrieve the patron's email settings from the Cloud Library API.
 
-        Returns:
+        Returns
+        -------
             dict: Response payload for patron's email settings as JSON.
         """
         path = f"library/{self.library}/email?_data=routes%2Flibrary.%24name.email"
         return await self.request("GET", path)
 
     async def featured(self):
-        """
-        Retrieves the patron's featured items from the Cloud Library API.
+        """Retrieve the patron's featured items from the Cloud Library API.
 
-        Returns:
+        Returns
+        -------
             dict: Response payload for patron's featured items as JSON.
         """
         path = f"library/{self.library}/featured?_data=root"
         return await self.request("GET", path)
 
     async def notifications(self, unread="true", notification_id_to_archive=[]):
-        """
-        Retrieves the patron's notifications from the Cloud Library API.
+        """Retrieve the patron's notifications from the Cloud Library API.
 
-        Returns:
+        Returns
+        -------
             dict: Response payload for patron's notifications as JSON.
         """
         path = f"library/{self.library}/notifications?_data=routes%2Flibrary.%24name.notifications"
