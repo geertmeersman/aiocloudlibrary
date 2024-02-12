@@ -22,6 +22,7 @@ Example:
 
     # Similarly fetch other data using client.history(), client.holds(), client.saved(), client.featured()
 
+
 """
 
 import logging
@@ -100,6 +101,7 @@ class CloudLibraryClient:
         Returns:
         -------
             dict or None: Response payload as JSON or None if return_json is False.
+
         """
         if self.session is None and not start_session:
             await self.start_session()
@@ -145,6 +147,7 @@ class CloudLibraryClient:
         Returns:
         -------
             str: Path for the specified route.
+
         """
         return f"library/{self.library}/mybooks/{route}?_data=routes/library.$name.mybooks.{route}"
 
@@ -154,6 +157,7 @@ class CloudLibraryClient:
         Returns
         -------
             dict: Response payload for current patron items as JSON.
+
         """
         path = self.get_path("current")
         data = {
@@ -168,6 +172,7 @@ class CloudLibraryClient:
         Returns
         -------
             dict: Response payload for patron's holds as JSON.
+
         """
         path = self.get_path("holds")
         data = {
@@ -181,6 +186,7 @@ class CloudLibraryClient:
         Returns
         -------
             dict: Response payload for patron's borrowing history as JSON.
+
         """
         path = self.get_path("history")
         data = {"format": "", "sort": "BorrowedDateDescending", "status": ""}
@@ -192,6 +198,7 @@ class CloudLibraryClient:
         Returns
         -------
             dict: Response payload for patron's saved items as JSON.
+
         """
         path = self.get_path("saved")
         data = {
@@ -205,6 +212,7 @@ class CloudLibraryClient:
         Returns
         -------
             dict: Response payload for patron's email settings as JSON.
+
         """
         path = f"library/{self.library}/email?_data=routes%2Flibrary.%24name.email"
         return await self.request("GET", path)
@@ -215,6 +223,7 @@ class CloudLibraryClient:
         Returns
         -------
             dict: Response payload for patron's featured items as JSON.
+
         """
         path = f"library/{self.library}/featured?_data=root"
         return await self.request("GET", path)
@@ -225,6 +234,7 @@ class CloudLibraryClient:
         Returns
         -------
             dict: Response payload for patron's notifications as JSON.
+
         """
         path = f"library/{self.library}/notifications?_data=routes%2Flibrary.%24name.notifications"
         if len(notification_id_to_archive) > 0:
