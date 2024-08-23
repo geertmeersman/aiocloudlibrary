@@ -126,6 +126,11 @@ class CloudLibraryClient:
                     else:
                         return
                 else:
+                    _LOGGER.error(
+                        "Request to %s failed with status code %d",
+                        endpoint_path,
+                        response.status,
+                    )
                     raise Exception(
                         f"Request to {endpoint_path} failed with status code {response.status}"
                     )
@@ -141,6 +146,11 @@ class CloudLibraryClient:
                     else:
                         return
                 else:
+                    _LOGGER.error(
+                        "Request to %s failed with status code %d",
+                        endpoint_path,
+                        response.status,
+                    )
                     raise Exception(
                         f"Request to {endpoint_path} failed with status code {response.status}"
                     )
