@@ -68,7 +68,15 @@ class CloudLibraryClient:
             "pin": self.pin,
             "library": self.library,
         }
-        for expected_status in [204, 200]:
+        for expected_status in [200]:
+            await self.request(
+                "GET",
+                f"library/{self.library}",
+                return_json=False,
+                expected_status=expected_status,
+                start_session=True,
+            )
+        for expected_status in [200]:
             await self.request(
                 "POST",
                 "?_data=root",
